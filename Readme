@@ -1,0 +1,86 @@
+# Portfolio Contact API
+
+A tiny Express server with one job: take a submission from your portfolio's
+contact form and email it to you. Built with Nodemailer, so it works with
+any SMTP provider (Gmail, Outlook, Zoho, a custom domain inbox, etc.).
+
+## 1. Install dependencies
+
+```bash
+cd backend
+npm install
+```
+
+## 2. Configure your email credentials
+
+```bash
+cp .env.example .env
+```
+
+Then open `.env` and fill in your real values.
+
+**Using Gmail (easiest to start with):**
+1. Turn on 2-Step Verification on the Google account: https://myaccount.google.com/security
+2. Create an App Password: https://myaccount.google.com/apppasswords
+3. Use that 16-character password as `SMTP_PASS` (not your normal Gmail password)
+4. `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=587`, `SMTP_SECURE=false`
+
+**Using another provider:** any SMTP host/port/credentials work — check your
+email provider's SMTP settings page (Outlook, Zoho, and most hosting panels
+all publish these).
+
+## 3. Run it locally
+
+```bash
+npm start
+```
+
+You should see:
+```
+Contact API running on http://localhost:5000
+```
+
+Test it directly:
+```bash
+curl -X POST http://localhost:5000/api/contact \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test User","email":"test@example.com","message":"Hello, just testing!"}'
+```
+
+If it worked, you'll get `{"ok":true}` back and an email in your inbox.
+
+## 4. Point the frontend at it
+
+In `assets/main.js`, find the `API_URL` constant near the contact-form
+handler and set it to wherever this server is running:
+
+```js
+const API_URL = 'http://localhost:5000/api/contact'; // local testing
+// const API_URL = 'https://your-deployed-api.com/api/contact'; // production
+```
+
+The form falls back to opening the visitor's email client if the API call
+fails (e.g. the backend isn't deployed yet), so the site still works either way.
+
+## 5. Deploy it somewhere it can stay running
+
+This is a normal persistent Node/Express server, so it needs a host that
+keeps a process running (not a static site host). Good free/cheap options:
+
+- **Render** (render.com) — free tier, connect your GitHub repo, set the
+  environment variables in the dashboard, done.
+- **Railway** (railway.app) — similar flow, generous free tier.
+- **Fly.io** — a bit more setup, more control.
+
+Whichever you use:
+1. Push this `backend/` folder to its own GitHub repo (or a subfolder of your main one)
+2. Set the same variables from `.env` in the host's dashboard as environment variables
+3. Set `ALLOWED_ORIGIN` to your real portfolio URL once it's live, not `*`
+4. Update `API_URL` in `assets/main.js` to the deployed URL and re-upload your site
+
+## Notes
+
+- Rate-limited to 5 submissions per 15 minutes per IP, to avoid abuse.
+- Validates name/email/message server-side (not just in the browser).
+- Sets `replyTo` to the sender's email, so hitting "Reply" in your inbox
+  goes straight back to them.

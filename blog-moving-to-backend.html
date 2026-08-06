@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why I'm Moving From Frontend to Backend — Mir Nasrullah</title>
+<meta name="description" content="Reflections on why a frontend developer decides to pick up backend skills, and what that transition actually looks like.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+<!-- Open Graph / social sharing -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Why I'm Moving From Frontend to Backend — Mir Nasrullah">
+<meta property="og:description" content="Reflections on why a frontend developer decides to pick up backend skills, and what that transition actually looks like.">
+<meta property="og:image" content="assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://yourportfolio.com/blog-moving-to-backend.html">
+<meta property="og:site_name" content="Mir Nasrullah — Portfolio">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Why I'm Moving From Frontend to Backend — Mir Nasrullah">
+<meta name="twitter:description" content="Reflections on why a frontend developer decides to pick up backend skills, and what that transition actually looks like.">
+<meta name="twitter:image" content="assets/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style/main.css">
+<link rel="stylesheet" href="style/responsive.css">
+</head>
+<body class="loading">
+
+<div class="loader">
+  <h1 class="loader-text">Mir Nasrullah</h1>
+</div>
+
+<div id="app">
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<nav id="siteNav">
+  <div class="wrap">
+    <a href="index.html#home"><div class="logo">MIR<span>.</span>DEV</div></a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html#home">Home</a>
+      <a href="index.html#about">About</a>
+      <a href="service.html#service">Service</a>
+      <a href="index.html#skills">Skills</a>
+      <a href="index.html#tools">Tools</a>
+      <a href="service.html#pricing">Pricing</a>
+      <a href="index.html#project">Project</a>
+      <a href="blog.html#blog">Blog</a>
+      <a href="contact.html#contact">Contact</a>
+    </div>
+    <a href="contact.html#contact" class="nav-cta">Get in touch</a>
+    <button class="burger" id="burgerBtn" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<header class="page-hero">
+  <div class="wrap article">
+    <div class="article-meta load-in">
+      <span class="accent">Blog</span>
+      <span class="dot-sep"></span>
+      <span>4 min read</span>
+    </div>
+    <h1 class="load-in" style="--d:.1s">Why I'm Moving From Frontend to Backend</h1>
+  </div>
+</header>
+
+<section class="section" style="padding-top:0;">
+  <div class="wrap">
+    <div class="article reveal">
+      <div class="article-cover">
+        <svg viewBox="0 0 300 160" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <rect width="300" height="160" fill="#171815"/>
+            <circle cx="60" cy="40" r="70" fill="#c8ff3d" opacity="0.12"/>
+            <path d="M40 120l40-40 30 30 60-60 40 40" stroke="#c8ff3d" stroke-width="2" fill="none" opacity="0.5"/>
+          </svg>
+      </div>
+      <div class="article-body">
+        
+        <p>For the last two years, my job has been making things look right and feel right in the browser — spacing, states, responsiveness, the hundred small details that decide whether an interface feels solid or flimsy. I still care about all of that. But somewhere in the last few months, I noticed the questions I found most interesting weren't about the interface anymore. They were about what happens before the interface even has data to show.</p>
+
+        <p>How does the server decide what to send back? Why does this endpoint take 400ms and that one takes 40? What actually happens between a form submission and a row appearing in a database? I could describe the shape of these problems, but I couldn't answer them — and that gap started to bother me more than it should have for someone who was, by most measures, doing fine as a frontend developer.</p>
+
+        <h2>The frontend ceiling</h2>
+        <p>There's a specific kind of ceiling you hit as a frontend-only developer: you can build a beautiful, fast, accessible interface, and still be completely dependent on someone else's API to make it useful. Every "can we also show X" conversation eventually becomes "that depends on what the backend can give us." I got tired of that depending. I wanted to be the person who could answer it, not just relay it.</p>
+
+        <h2>What I'm actually doing about it</h2>
+        <ul>
+          <li>Learning Node.js and Express well enough to build real routes, not just tutorial ones.</li>
+          <li>Building small full-stack projects instead of frontend-only ones, even when it's slower.</li>
+          <li>Reading other people's backend code instead of only ever writing my own from scratch.</li>
+          <li>Treating databases as a first-class thing to understand, not an afterthought.</li>
+        </ul>
+
+        <p>None of this makes the last two years less valuable. If anything, thinking in components and state has made backend concepts click faster than I expected — more on that in a later post. But I wanted to write this one down mostly for myself: as a marker of <em>why</em> I started, so six months from now I can look back and see whether it was worth it.</p>
+
+        <blockquote>The goal isn't to stop being a frontend developer. It's to stop being limited by only being one.</blockquote>
+        
+      </div>
+      <div class="article-footer">
+        <a href="blog.html#blog" class="article-back">&larr; Back to all posts</a>
+        <a href="contact.html#contact" class="btn-ghost">Get in touch</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <p>© 2026 Mir Nasrullah. Built with intent.</p>
+  <div class="footer-social">
+    <a href="#" aria-label="GitHub"><svg width="15" height="15" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.5c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 015 0c1.9-1.3 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0012 2z" fill="#9a9c93"/></svg></a>
+    <a href="#" aria-label="LinkedIn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#9a9c93" stroke-width="1.6"/><path d="M7.5 10v6.5M7.5 7.2v.1M11 16.5V13c0-1.4.9-2.3 2.1-2.3 1.2 0 1.9.8 1.9 2.3v3.5" stroke="#9a9c93" stroke-width="1.6" stroke-linecap="round"/></svg></a>
+    <a href="#" aria-label="Twitter / X"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M20 4L4 20" stroke="#9a9c93" stroke-width="1.6" stroke-linecap="round"/></svg></a>
+    <a href="#" aria-label="Instagram"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="#9a9c93" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="#9a9c93" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="#9a9c93"/></svg></a>
+    <a href="#" aria-label="WhatsApp"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 00-7.8 13.4L3 21l4.7-1.2A9 9 0 1012 3z" stroke="#9a9c93" stroke-width="1.6" stroke-linejoin="round"/></svg></a>
+  </div>
+  <p>Frontend Developer → Backend Developer</p>
+</footer>
+</div><!-- /#app -->
+
+<script src="script/main.js"></script>
+</body>
+</html>
