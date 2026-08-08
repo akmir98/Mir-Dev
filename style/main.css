@@ -845,3 +845,153 @@ body.loading{ overflow:hidden; }
   .loader-text{ animation:none; opacity:1; transform:none; }
   #app{ transition:none; }
 }
+
+/* ============================================================
+   INTERACTION LAYER — cursor effects, tilts, magnetism, ripples
+   ============================================================ */
+
+/* --- 2. Hero photo: 3D tilt + cursor-reactive shine --- */
+.hero-art{ perspective:1200px; }
+.hero-photo-frame{ transform-style:preserve-3d; }
+.hero-photo{ position:relative; }
+.hero-photo .hero-shine{
+  position:absolute; inset:0; z-index:3; pointer-events:none; opacity:0;
+  background:radial-gradient(240px circle at var(--sx,50%) var(--sy,50%), rgba(255,255,255,0.28), transparent 55%);
+  transition:opacity .3s ease;
+  mix-blend-mode:overlay;
+}
+.hero-photo-frame:hover .hero-shine{ opacity:1; }
+
+/* --- 3. Cursor-following glow spotlight on cards --- */
+.skill-card, .service-card, .process-card, .price-card,
+.review-card, .blog-card, .project-card{
+  position:relative;
+}
+.skill-card::before, .service-card::before, .process-card::before, .price-card::before,
+.review-card::before, .blog-card::before, .project-card::before{
+  content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+  border-radius:inherit;
+  background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%), rgba(200,255,61,0.14), transparent 70%);
+  opacity:0; transition:opacity .35s ease;
+}
+.skill-card:hover::before, .service-card:hover::before, .process-card:hover::before,
+.price-card:hover::before, .review-card:hover::before, .blog-card:hover::before,
+.project-card:hover::before{ opacity:1; }
+/* keep real content above the glow layer */
+.skill-card > *, .service-card > *, .process-card > *, .price-card > *,
+.review-card > *, .blog-card > *, .project-card > *{ position:relative; z-index:1; }
+
+/* --- 5. Project card tilt on hover --- */
+.project-card{ transform-style:preserve-3d; will-change:transform; }
+.projects-tilt-wrap{ perspective:1000px; }
+.project-grid{ perspective:1000px; }
+
+/* --- 6. Timeline connecting line --- */
+.timeline{ position:relative; }
+.timeline::before{
+  content:''; position:absolute; left:172px; top:0; bottom:0; width:1px;
+  background:var(--card-border);
+}
+.timeline::after{
+  content:''; position:absolute; left:172px; top:0; width:1px; height:0%;
+  background:var(--accent); box-shadow:0 0 8px rgba(200,255,61,.6);
+  transition:height 1.6s cubic-bezier(.16,.8,.3,1);
+}
+.timeline.is-visible::after{ height:100%; }
+.tl-item{ position:relative; }
+.tl-item::before{
+  content:''; position:absolute; left:168px; top:36px; width:9px; height:9px;
+  border-radius:50%; background:var(--bg); border:2px solid var(--card-border);
+  z-index:1; transition:border-color .4s ease, box-shadow .4s ease;
+}
+.timeline.is-visible .tl-item::before{
+  border-color:var(--accent); box-shadow:0 0 8px rgba(200,255,61,.5);
+}
+@media(max-width:640px){
+  .timeline::before, .timeline::after, .tl-item::before{ display:none; }
+}
+
+/* --- 4. Staggered reveals: tools rows + FAQ items --- */
+.tools-list .tool-row{
+  opacity:0; transform:translateY(14px);
+  transition:opacity .55s ease, transform .55s ease;
+}
+.tools-list.is-visible .tool-row{ opacity:1; transform:translateY(0); }
+.tools-list.is-visible .tool-row:nth-child(1){ transition-delay:.05s; }
+.tools-list.is-visible .tool-row:nth-child(2){ transition-delay:.12s; }
+.tools-list.is-visible .tool-row:nth-child(3){ transition-delay:.19s; }
+.tools-list.is-visible .tool-row:nth-child(4){ transition-delay:.26s; }
+.tools-list.is-visible .tool-row:nth-child(5){ transition-delay:.33s; }
+
+.faq .faq-item{
+  opacity:0; transform:translateY(12px);
+  transition:opacity .5s ease, transform .5s ease;
+}
+.faq.is-visible .faq-item{ opacity:1; transform:translateY(0); }
+.faq.is-visible .faq-item:nth-child(1){ transition-delay:.04s; }
+.faq.is-visible .faq-item:nth-child(2){ transition-delay:.1s; }
+.faq.is-visible .faq-item:nth-child(3){ transition-delay:.16s; }
+.faq.is-visible .faq-item:nth-child(4){ transition-delay:.22s; }
+
+/* --- 7. Magnetic buttons (JS sets transform; this just smooths it) --- */
+.btn-primary, .btn-ghost, .nav-cta{
+  transition:transform .25s cubic-bezier(.16,.8,.3,1), box-shadow .25s ease, border-color .25s ease, background .2s ease, color .2s ease;
+}
+
+/* --- 8. Custom cursor --- */
+.custom-cursor-dot, .custom-cursor-ring{
+  position:fixed; top:0; left:0; pointer-events:none; z-index:9998;
+  border-radius:50%; opacity:0; transition:opacity .25s ease;
+}
+.custom-cursor-dot{
+  width:6px; height:6px; background:var(--accent);
+  margin:-3px 0 0 -3px;
+}
+.custom-cursor-ring{
+  width:34px; height:34px; border:1.5px solid rgba(200,255,61,0.6);
+  margin:-17px 0 0 -17px;
+  transition:opacity .25s ease, width .25s ease, height .25s ease, margin .25s ease, border-color .25s ease, background .25s ease;
+}
+.custom-cursor-ring.cursor-hover{
+  width:54px; height:54px; margin:-27px 0 0 -27px;
+  background:rgba(200,255,61,0.08); border-color:var(--accent);
+}
+html.has-custom-cursor, html.has-custom-cursor *{ cursor:none !important; }
+html.has-custom-cursor .custom-cursor-dot,
+html.has-custom-cursor .custom-cursor-ring{ opacity:1; }
+
+/* --- 9. Button ripple + shine --- */
+.btn-primary, .btn-ghost, .nav-cta, .price-cta{
+  position:relative; overflow:hidden;
+}
+.btn-ripple{
+  position:absolute; border-radius:50%; background:rgba(255,255,255,0.4);
+  transform:scale(0); opacity:1; pointer-events:none;
+  animation:rippleExpand .65s ease-out forwards;
+}
+@keyframes rippleExpand{
+  to{ transform:scale(1); opacity:0; }
+}
+.btn-primary::after{
+  content:''; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.35) 50%, transparent 60%);
+  transform:translateX(-140%) skewX(-15deg);
+  transition:none;
+}
+.btn-primary:hover::after{
+  animation:btnShine .9s ease;
+}
+@keyframes btnShine{
+  to{ transform:translateX(140%) skewX(-15deg); }
+}
+
+/* --- 10. Subtle scroll parallax --- */
+.about-bg-glow, .stat-icon{ will-change:transform; }
+
+@media (prefers-reduced-motion: reduce){
+  .hero-photo .hero-shine{ display:none; }
+  .btn-primary::after{ display:none; }
+  .timeline::after{ transition:none; }
+  .custom-cursor-dot, .custom-cursor-ring{ display:none; }
+  html.has-custom-cursor, html.has-custom-cursor *{ cursor:auto !important; }
+}

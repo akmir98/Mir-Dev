@@ -12,6 +12,10 @@ window.addEventListener('load', () => {
 });
 
 // Hero mouse-reactive background: parallax layers + cursor-following glow
+// + 3D tilt/shine on the photo. Exposes window.__heroMouse so the dust
+// particle system (below) can react to the same cursor position.
+window.__heroMouse = { x: -9999, y: -9999, active: false };
+
 (function(){
   const hero = document.getElementById('home');
   if(!hero) return;
@@ -22,6 +26,8 @@ window.addEventListener('load', () => {
   const aurora = hero.querySelector('.hero-aurora');
   const dust = hero.querySelector('.hero-dust');
   const photoFrame = hero.querySelector('.hero-photo-frame');
+  const photo = hero.querySelector('.hero-photo');
+  const shine = hero.querySelector('.hero-shine');
   const glow = hero.querySelector('.hero-cursor-glow');
 
   let targetX = 0, targetY = 0;   // normalized -1..1, relative to hero center
@@ -38,6 +44,22 @@ window.addEventListener('load', () => {
     targetX = Math.max(-1, Math.min(1, (relX / rect.width - 0.5) * 2));
     targetY = Math.max(-1, Math.min(1, (relY / rect.height - 0.5) * 2));
     mouseX = relX; mouseY = relY;
+
+    window.__heroMouse.x = relX;
+    window.__heroMouse.y = relY;
+    window.__heroMouse.active = true;
+
+    // shine highlight position, relative to the photo itself
+    if(photo){
+      const prect = photo.getBoundingClientRect();
+      const sx = ((e.clientX - prect.left) / prect.width) * 100;
+      const sy = ((e.clientY - prect.top) / prect.height) * 100;
+      if(sx >= -20 && sx <= 120 && sy >= -20 && sy <= 120){
+        photo.style.setProperty('--sx', sx.toFixed(1) + '%');
+        photo.style.setProperty('--sy', sy.toFixed(1) + '%');
+      }
+    }
+
     if(!hovering){
       hovering = true;
       if(glow) glow.style.opacity = '1';
@@ -47,6 +69,9 @@ window.addEventListener('load', () => {
   function onLeave(){
     hovering = false;
     targetX = 0; targetY = 0;
+    window.__heroMouse.active = false;
+    window.__heroMouse.x = -9999;
+    window.__heroMouse.y = -9999;
     if(glow) glow.style.opacity = '0';
   }
 
@@ -58,7 +83,11 @@ window.addEventListener('load', () => {
 
     if(aurora) aurora.style.transform = `translate3d(${(curX*18).toFixed(1)}px, ${(curY*18).toFixed(1)}px, 0)`;
     if(dust) dust.style.transform = `translate3d(${(curX*9).toFixed(1)}px, ${(curY*9).toFixed(1)}px, 0)`;
-    if(photoFrame) photoFrame.style.transform = `translate3d(${(curX*-14).toFixed(1)}px, ${(curY*-14).toFixed(1)}px, 0) rotate(${(curX*1.1).toFixed(2)}deg)`;
+    if(photoFrame){
+      photoFrame.style.transform =
+        `translate3d(${(curX*-14).toFixed(1)}px, ${(curY*-14).toFixed(1)}px, 0) ` +
+        `rotateY(${(curX*9).toFixed(2)}deg) rotateX(${(curY*-9).toFixed(2)}deg)`;
+    }
     if(glow) glow.style.transform = `translate3d(${glowX.toFixed(1)}px, ${glowY.toFixed(1)}px, 0)`;
 
     const stillMoving = Math.abs(targetX-curX) > 0.001 || Math.abs(targetY-curY) > 0.001 ||
@@ -110,11 +139,31 @@ window.addEventListener('load', () => {
     };
   }
 
+  const REPEL_RADIUS = 100;
+  const REPEL_STRENGTH = 2.4;
+
   function tick(){
     ctx.clearRect(0, 0, w, h);
+    const mouse = window.__heroMouse;
+    const mouseActive = mouse && mouse.active;
+
     particles.forEach(p => {
       p.x += p.vx;
       p.y += p.vy;
+
+      // gently push particles away from the cursor, they drift back
+      // naturally afterward via their own vx/vy
+      if(mouseActive){
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if(dist < REPEL_RADIUS && dist > 0.01){
+          const force = (REPEL_RADIUS - dist) / REPEL_RADIUS;
+          p.x += (dx / dist) * force * REPEL_STRENGTH;
+          p.y += (dy / dist) * force * REPEL_STRENGTH;
+        }
+      }
+
       if(p.y < -10) { p.y = h + 10; p.x = Math.random() * w; }
       if(p.x < -10) p.x = w + 10;
       if(p.x > w + 10) p.x = -10;
@@ -256,7 +305,7 @@ document.querySelectorAll('.faq-item').forEach(item => {
 const contactForm = document.getElementById('contactForm');
 if(contactForm){
   // Set this to your deployed backend once it's live — see backend/README.md
- const API_URL = '/api/contact';
+  const API_URL = 'http://localhost:5000/api/contact';
 
   const submitBtn = document.getElementById('cfSubmit');
   const statusEl = document.getElementById('cfStatus');
@@ -385,3 +434,158 @@ if(typedRoleEl){
     }
   }
 }
+
+// ============================================================
+// INTERACTION LAYER — card glow, tilts, magnetism, cursor, ripple, parallax
+// ============================================================
+(function(){
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = window.matchMedia('(pointer: fine)').matches;
+
+  // --- 3. Cursor-following glow spotlight on cards ---
+  const glowCards = document.querySelectorAll(
+    '.skill-card, .service-card, .process-card, .price-card, .review-card, .blog-card, .project-card'
+  );
+  if(finePointer && glowCards.length){
+    glowCards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const mx = ((e.clientX - rect.left) / rect.width) * 100;
+        const my = ((e.clientY - rect.top) / rect.height) * 100;
+        card.style.setProperty('--mx', mx.toFixed(1) + '%');
+        card.style.setProperty('--my', my.toFixed(1) + '%');
+      }, { passive:true });
+    });
+  }
+
+  // --- 5. Project card 3D tilt on hover ---
+  const projectCards = document.querySelectorAll('.project-card');
+  if(finePointer && !reduceMotion && projectCards.length){
+    projectCards.forEach(card => {
+      let raf = null;
+      card.addEventListener('mousemove', (e) => {
+        if(raf) return;
+        raf = requestAnimationFrame(() => {
+          const rect = card.getBoundingClientRect();
+          const px = (e.clientX - rect.left) / rect.width - 0.5;
+          const py = (e.clientY - rect.top) / rect.height - 0.5;
+          card.style.transform = `translateY(-6px) rotateY(${(px*6).toFixed(2)}deg) rotateX(${(py*-6).toFixed(2)}deg)`;
+          raf = null;
+        });
+      }, { passive:true });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  }
+
+  // --- 7. Magnetic buttons ---
+  const magneticEls = document.querySelectorAll('.btn-primary, .btn-ghost, .nav-cta');
+  if(finePointer && !reduceMotion && magneticEls.length){
+    const STRENGTH = 0.28;
+    const MAX_PULL = 10;
+    magneticEls.forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        let dx = (e.clientX - (rect.left + rect.width / 2)) * STRENGTH;
+        let dy = (e.clientY - (rect.top + rect.height / 2)) * STRENGTH;
+        dx = Math.max(-MAX_PULL, Math.min(MAX_PULL, dx));
+        dy = Math.max(-MAX_PULL, Math.min(MAX_PULL, dy));
+        btn.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`;
+      }, { passive:true });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
+    });
+  }
+
+  // --- 8. Custom cursor (dot + lagging ring) ---
+  if(finePointer && !reduceMotion){
+    const dot = document.createElement('div');
+    dot.className = 'custom-cursor-dot';
+    const ring = document.createElement('div');
+    ring.className = 'custom-cursor-ring';
+    document.body.appendChild(dot);
+    document.body.appendChild(ring);
+    document.documentElement.classList.add('has-custom-cursor');
+
+    let mx = -100, my = -100, rx = -100, ry = -100;
+    let started = false;
+
+    function moveCursor(e){
+      mx = e.clientX; my = e.clientY;
+      dot.style.transform = `translate3d(${mx}px, ${my}px, 0)`;
+      if(!started){
+        started = true;
+        rx = mx; ry = my;
+        requestAnimationFrame(ringTick);
+      }
+    }
+    function ringTick(){
+      rx += (mx - rx) * 0.18;
+      ry += (my - ry) * 0.18;
+      ring.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
+      requestAnimationFrame(ringTick);
+    }
+    document.addEventListener('mousemove', moveCursor, { passive:true });
+
+    const hoverSelector = 'a, button, input, textarea, [role="button"], .price-card, .skill-card, .service-card';
+    document.addEventListener('mouseover', (e) => {
+      if(e.target.closest(hoverSelector)) ring.classList.add('cursor-hover');
+    }, { passive:true });
+    document.addEventListener('mouseout', (e) => {
+      if(e.target.closest(hoverSelector)) ring.classList.remove('cursor-hover');
+    }, { passive:true });
+
+    document.addEventListener('mouseleave', () => {
+      dot.style.opacity = '0'; ring.style.opacity = '0';
+    });
+    document.addEventListener('mouseenter', () => {
+      dot.style.opacity = ''; ring.style.opacity = '';
+    });
+  }
+
+  // --- 9. Button ripple on click ---
+  const rippleEls = document.querySelectorAll('.btn-primary, .btn-ghost, .nav-cta, .price-cta');
+  rippleEls.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height) * 1.8;
+      const ripple = document.createElement('span');
+      ripple.className = 'btn-ripple';
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+      ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+      btn.appendChild(ripple);
+      ripple.addEventListener('animationend', () => ripple.remove());
+    });
+  });
+
+  // --- 10. Subtle scroll parallax ---
+  if(!reduceMotion){
+    const parallaxTargets = [
+      ...document.querySelectorAll('.about-bg-glow'),
+      ...document.querySelectorAll('.stat-icon')
+    ];
+    if(parallaxTargets.length){
+      let ticking = false;
+      function updateParallax(){
+        const vh = window.innerHeight;
+        parallaxTargets.forEach(el => {
+          const rect = el.getBoundingClientRect();
+          const distFromCenter = (rect.top + rect.height / 2) - vh / 2;
+          const speed = el.classList.contains('about-bg-glow') ? 0.06 : 0.035;
+          el.style.transform = `translateY(${(distFromCenter * speed).toFixed(1)}px)`;
+        });
+        ticking = false;
+      }
+      document.addEventListener('scroll', () => {
+        if(!ticking){
+          requestAnimationFrame(updateParallax);
+          ticking = true;
+        }
+      }, { passive:true });
+      updateParallax();
+    }
+  }
+})();
