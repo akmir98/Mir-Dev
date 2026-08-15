@@ -11,7 +11,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Services & Pricing — Mir Nasrullah">
 <meta property="og:description" content="Frontend, backend, and full-stack development services from Mir Nasrullah, with simple hourly and project-based pricing.">
-<meta property="og:image" content="og-image.png">
+<meta property="og:image" content="assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://yourportfolio.com/service.html">
@@ -43,12 +43,15 @@
       <a href="index.html#about">About</a>
       <a href="service.html#service">Service</a>
       <a href="index.html#skills">Skills</a>
-      <a href="index.html#tools">Tools</a>
       <a href="service.html#pricing">Pricing</a>
       <a href="index.html#project">Project</a>
       <a href="blog.html#blog">Blog</a>
       <a href="contact.html#contact">Contact</a>
     </div>
+    <button class="cmdk-trigger" id="cmdkTrigger" aria-label="Open command palette">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span class="cmdk-kbd">&#8984;K</span>
+    </button>
     <a href="contact.html#contact" class="nav-cta">Get in touch</a>
     <button class="burger" id="burgerBtn" aria-label="Toggle menu" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -164,7 +167,7 @@
     <div class="pricing-grid">
       <div class="price-card reveal">
         <span class="price-tier">Starter</span>
-        <div class="price-amount">10,000<span>/PKR</span></div>
+        <div class="price-amount">$15<span>/hr</span></div>
         <p class="price-desc">For small landing pages and simple UI fixes.</p>
         <ul class="price-features">
           <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4 10-10" stroke="#c8ff3d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Responsive frontend build</li>
@@ -177,7 +180,7 @@
       <div class="price-card featured reveal" style="--d:.1s">
         <span class="price-badge">Most popular</span>
         <span class="price-tier">Full-Stack</span>
-        <div class="price-amount">30,000<span>/PKR</span></div>
+        <div class="price-amount">$30<span>/hr</span></div>
         <p class="price-desc">For complete features — frontend, backend, and everything between.</p>
         <ul class="price-features">
           <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4 10-10" stroke="#c8ff3d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Frontend + backend build</li>
@@ -218,20 +221,18 @@
         <h3>Interface layer</h3>
         <p style="color:var(--ink-dim); font-size:14px;">What I use to build the parts your users actually see and click.</p>
         <div class="chips">
-          <span class="chip">HTML5</span>
-          <span class="chip">CSS3</span>
-          <span class="chip">JavaScript</span>
-          <span class="chip">React</span>
+          <span class="chip chip-strong">JavaScript</span>
+          <span class="chip">HTML</span>
+          <span class="chip">CSS</span>
         </div>
       </div>
       <div class="skill-card reveal" style="--d:.1s">
         <span class="tag">Backend</span>
         <h3>Logic & data layer</h3>
-        <p style="color:var(--ink-dim); font-size:14px;">What powers the features underneath — APIs, routes, and storage.</p>
+        <p style="color:var(--ink-dim); font-size:14px;">What powers the features underneath — routes and server logic.</p>
         <div class="chips">
           <span class="chip">Node.js</span>
           <span class="chip">Express</span>
-          <span class="chip">REST APIs</span>
           <span class="chip">Git</span>
         </div>
       </div>

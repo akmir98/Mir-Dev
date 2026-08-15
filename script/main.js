@@ -444,7 +444,7 @@ if(typedRoleEl){
 
   // --- 3. Cursor-following glow spotlight on cards ---
   const glowCards = document.querySelectorAll(
-    '.skill-card, .service-card, .process-card, .price-card, .review-card, .blog-card, .project-card'
+    '.skill-card, .service-card, .process-card, .price-card, .review-card, .blog-card, .project-card, .review-quote-card'
   );
   if(finePointer && glowCards.length){
     glowCards.forEach(card => {
@@ -587,5 +587,262 @@ if(typedRoleEl){
       }, { passive:true });
       updateParallax();
     }
+  }
+})();
+
+// ============================================================
+// COMMAND PALETTE (Ctrl/Cmd + K)
+// ============================================================
+(function(){
+  const commands = [
+    { title: 'Home', hint: 'Go to', icon: '⌂', url: 'index.html#home' },
+    { title: 'About', hint: 'Go to', icon: '☺', url: 'index.html#about' },
+    { title: 'Skills', hint: 'Go to', icon: '{ }', url: 'index.html#skills' },
+    { title: 'Projects', hint: 'Go to', icon: '▣', url: 'index.html#project' },
+    { title: 'Journey', hint: 'Go to', icon: '↗', url: 'index.html#experience' },
+    { title: 'Blog', hint: 'Go to', icon: '✎', url: 'index.html#blog' },
+    { title: 'Client Reviews', hint: 'Go to', icon: '"', url: 'index.html#reviews' },
+    { title: 'FAQ', hint: 'Go to', icon: '?', url: 'index.html#faq' },
+    { title: 'Services', hint: 'Go to', icon: '★', url: 'service.html#service' },
+    { title: 'Pricing', hint: 'Go to', icon: '$', url: 'service.html#pricing' },
+    { title: 'Contact page', hint: 'Go to', icon: '✉', url: 'contact.html#contact' },
+    { title: 'All blog posts', hint: 'Go to', icon: '✎', url: 'blog.html#blog' },
+    { title: 'Email me', hint: 'Action', icon: '@', url: 'mailto:mir.nasrullah@email.com' },
+    { title: 'Download CV', hint: 'Action', icon: '⬇', url: 'assets/Mir-Nasrullah-CV.pdf' },
+    { title: 'View GitHub', hint: 'Action', icon: '⌥', url: 'https://github.com/' }
+  ];
+
+  const overlay = document.createElement('div');
+  overlay.className = 'cmdk-overlay';
+  overlay.innerHTML = `
+    <div class="cmdk-modal">
+      <div class="cmdk-input-row">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input type="text" class="cmdk-input" placeholder="Jump to a section, or take an action…" autocomplete="off">
+        <span class="cmdk-esc">Esc</span>
+      </div>
+      <div class="cmdk-results"></div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const input = overlay.querySelector('.cmdk-input');
+  const resultsEl = overlay.querySelector('.cmdk-results');
+  let activeIndex = 0;
+  let filtered = commands.slice();
+
+  function render(){
+    if(!filtered.length){
+      resultsEl.innerHTML = '<div class="cmdk-empty">No matches. Try "contact" or "blog".</div>';
+      return;
+    }
+    resultsEl.innerHTML = filtered.map((cmd, i) => `
+      <div class="cmdk-item ${i === activeIndex ? 'active' : ''}" data-index="${i}">
+        <div class="cmdk-item-left">
+          <span class="cmdk-item-icon">${cmd.icon}</span>
+          <span class="cmdk-item-title">${cmd.title}</span>
+        </div>
+        <span class="cmdk-item-hint">${cmd.hint}</span>
+      </div>
+    `).join('');
+  }
+
+  function filterCommands(query){
+    const q = query.trim().toLowerCase();
+    filtered = !q ? commands.slice() : commands.filter(c => c.title.toLowerCase().includes(q));
+    activeIndex = 0;
+    render();
+  }
+
+  function openPalette(){
+    overlay.classList.add('open');
+    input.value = '';
+    filterCommands('');
+    setTimeout(() => input.focus(), 50);
+    document.body.style.overflow = 'hidden';
+  }
+  function closePalette(){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function go(cmd){
+    if(!cmd) return;
+    closePalette();
+    if(cmd.url.startsWith('mailto:') || cmd.url.startsWith('http')){
+      window.open(cmd.url, cmd.url.startsWith('http') ? '_blank' : '_self');
+    } else {
+      window.location.href = cmd.url;
+    }
+  }
+
+  input.addEventListener('input', (e) => filterCommands(e.target.value));
+  resultsEl.addEventListener('click', (e) => {
+    const item = e.target.closest('.cmdk-item');
+    if(item) go(filtered[Number(item.dataset.index)]);
+  });
+  overlay.addEventListener('click', (e) => { if(e.target === overlay) closePalette(); });
+
+  document.addEventListener('keydown', (e) => {
+    const isOpen = overlay.classList.contains('open');
+    if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'){
+      e.preventDefault();
+      isOpen ? closePalette() : openPalette();
+      return;
+    }
+    if(!isOpen) return;
+    if(e.key === 'Escape'){ closePalette(); }
+    else if(e.key === 'ArrowDown'){ e.preventDefault(); activeIndex = Math.min(activeIndex+1, filtered.length-1); render(); }
+    else if(e.key === 'ArrowUp'){ e.preventDefault(); activeIndex = Math.max(activeIndex-1, 0); render(); }
+    else if(e.key === 'Enter'){ e.preventDefault(); go(filtered[activeIndex]); }
+  });
+
+  const trigger = document.getElementById('cmdkTrigger');
+  if(trigger) trigger.addEventListener('click', openPalette);
+})();
+
+// ============================================================
+// HIDDEN EASTER EGG — console greeting + Konami code
+// ============================================================
+(function(){
+  // Console greeting for fellow developers who open devtools
+  const accent = 'color:#c8ff3d; font-weight:bold;';
+  const dim = 'color:#9a9c93;';
+  console.log('%c👋 Hey, fellow developer.', 'font-size:16px;' + accent);
+  console.log('%cLooking at the code instead of the site — respect.', dim);
+  console.log('%cTry the Konami code anywhere on this page: ↑ ↑ ↓ ↓ ← → ← → B A', dim);
+  console.log('%cOr press Ctrl/Cmd + K to open the command palette.', dim);
+
+  // Konami code listener
+  const sequence = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  let progress = 0;
+
+  const eggOverlay = document.createElement('div');
+  eggOverlay.className = 'egg-overlay';
+  eggOverlay.innerHTML = `
+    <div class="egg-card">
+      <span class="egg-emoji">🥚</span>
+      <h3>You found the easter egg.</h3>
+      <p>Konami code, on a portfolio site. Someone actually reads the console. Thanks for looking closely — that's exactly the kind of attention to detail I try to bring to my own work.</p>
+      <a href="contact.html#contact" class="btn-primary">Say hi →</a>
+    </div>
+  `;
+  document.body.appendChild(eggOverlay);
+  eggOverlay.addEventListener('click', (e) => {
+    if(e.target === eggOverlay) eggOverlay.classList.remove('open');
+  });
+
+  function confettiBurst(){
+    const emojis = ['✨','🎉','⚡','🟢','💚'];
+    for(let i = 0; i < 24; i++){
+      const p = document.createElement('span');
+      p.className = 'egg-particle';
+      p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.animationDuration = (2 + Math.random() * 1.5) + 's';
+      p.style.fontSize = (14 + Math.random() * 14) + 'px';
+      document.body.appendChild(p);
+      p.addEventListener('animationend', () => p.remove());
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    if(key === sequence[progress]){
+      progress++;
+      if(progress === sequence.length){
+        progress = 0;
+        confettiBurst();
+        eggOverlay.classList.add('open');
+      }
+    } else {
+      progress = (key === sequence[0]) ? 1 : 0;
+    }
+  });
+})();
+
+// ============================================================
+// DEVELOPER TERMINAL (home page only)
+// ============================================================
+(function(){
+  const body = document.getElementById('terminalBody');
+  const input = document.getElementById('terminalInput');
+  if(!body || !input) return;
+
+  function print(text, cls){
+    const line = document.createElement('div');
+    line.className = 'terminal-line ' + (cls || 'out');
+    line.textContent = text;
+    body.appendChild(line);
+    body.scrollTop = body.scrollHeight;
+  }
+  function printCmd(text){
+    const line = document.createElement('div');
+    line.className = 'terminal-line cmd';
+    line.textContent = text;
+    body.appendChild(line);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  const commands = {
+    help(){
+      print('Available commands:');
+      print('  whoami        — who I am');
+      print('  skills        — what I work with');
+      print('  projects      — things I\'ve built');
+      print('  journey       — how I got here');
+      print('  contact       — how to reach me');
+      print('  sudo hire-me  — for anyone considering it');
+      print('  clear         — clear the terminal');
+    },
+    whoami(){
+      print('Mir Nasrullah — frontend developer, self-taught, growing into backend.', 'accent');
+      print('Based in Karachi, Pakistan. Open to work.');
+    },
+    skills(){
+      print('Frontend : JavaScript, HTML, CSS', 'accent');
+      print('Backend  : Node.js, Express', 'accent');
+      print('Tools    : Git, GitHub', 'accent');
+    },
+    projects(){
+      print('1. Dr Physio Rehab       — real client site (drphysiorehabonline.com)');
+      print('2. JavaScript Learning Hub — interactive JS platform (javascript-hub.vercel.app)');
+      print('3. Personal Portfolio v1 — an earlier build (my-portfoli-website.vercel.app)');
+      print('Scroll to the Projects section for links →', 'accent');
+    },
+    journey(){
+      print('2023–2025: Learned HTML, CSS, JavaScript, and React from scratch — self-taught.');
+      print('2025–Present: Building real projects, picking up Node.js and backend fundamentals.');
+    },
+    contact(){
+      print('Email : mir.nasrullah@email.com', 'accent');
+      print('Or use the contact form → contact.html', 'accent');
+    },
+    clear(){
+      body.innerHTML = '';
+    }
+  };
+  commands['sudo hire-me'] = function(){
+    print('Permission granted. Redirecting to contact page...', 'accent');
+    setTimeout(() => { window.location.href = 'contact.html#contact'; }, 900);
+  };
+
+  input.addEventListener('keydown', (e) => {
+    if(e.key !== 'Enter') return;
+    const raw = input.value;
+    const cmd = raw.trim().toLowerCase();
+    if(!cmd) return;
+    printCmd(raw);
+    input.value = '';
+    if(commands[cmd]){
+      commands[cmd]();
+    } else {
+      print(`command not found: ${cmd} — try 'help'`);
+    }
+  });
+
+  // Keep focus on the terminal input when the terminal itself is clicked
+  const windowEl = input.closest('.terminal-window');
+  if(windowEl){
+    windowEl.addEventListener('click', () => input.focus());
   }
 })();
