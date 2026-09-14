@@ -1,15 +1,37 @@
-// Preloader — shows "Mir Nasrullah" briefly, then reveals the page
-window.addEventListener('load', () => {
+// Preloader — shows "MIR.DEV" briefly, then reveals the page
+(function(){
   const loader = document.querySelector('.loader');
   const app = document.getElementById('app');
-  const reveal = () => {
+  const barFill = document.getElementById('loaderBarFill');
+  let revealed = false;
+
+  function reveal(){
+    if(revealed) return;
+    revealed = true;
     if(loader) loader.classList.add('hide');
     if(app) app.classList.add('show');
     document.body.classList.remove('loading');
-  };
-  if(!loader || !app){ reveal(); }
-  else setTimeout(reveal, 1400);
-});
+  }
+
+  if(!loader || !app){
+    reveal();
+    return;
+  }
+
+  // Start the progress line filling right away so it reads as real
+  // loading progress rather than a fixed decorative animation.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if(barFill) barFill.style.width = '100%';
+    });
+  });
+
+  window.addEventListener('load', () => setTimeout(reveal, 1400));
+
+  // Safety net: the page must never stay stuck behind the preloader,
+  // even if the 'load' event never fires or an unrelated script errors.
+  setTimeout(reveal, 4000);
+})();
 
 // Hero mouse-reactive background: parallax layers + cursor-following glow
 // + 3D tilt/shine on the photo. Exposes window.__heroMouse so the dust
@@ -208,20 +230,39 @@ window.__heroMouse = { x: -9999, y: -9999, active: false };
   updateProgress();
 })();
 
-// Navbar: shrinks on scroll down, expands again on scroll up
+// Navbar: shrinks + hides on scroll down, expands + reappears on scroll up
 const siteNav = document.getElementById('siteNav');
 if(siteNav){
-  let lastY = window.scrollY;
+  let stateY = window.scrollY; // last y at which we actually changed state
+  let ticking = false;
+  const THRESHOLD = 8; // ignore scroll jitter smaller than this many px
+
   function updateNavState(){
     const y = window.scrollY;
-    if(y > 40 && y > lastY){
-      siteNav.classList.add('scrolled');   // scrolling down — shrink
-    } else if(y < lastY || y <= 40){
-      siteNav.classList.remove('scrolled'); // scrolling up (or near top) — expand
+    const menuOpen = document.getElementById('navLinks')?.classList.contains('open');
+    const delta = y - stateY;
+
+    if(y <= 40){
+      siteNav.classList.remove('scrolled');
+      siteNav.classList.remove('nav-hidden');
+      stateY = y;
+    } else if(delta > THRESHOLD){
+      siteNav.classList.add('scrolled');
+      if(!menuOpen) siteNav.classList.add('nav-hidden');
+      stateY = y;
+    } else if(delta < -THRESHOLD){
+      siteNav.classList.remove('scrolled');
+      siteNav.classList.remove('nav-hidden');
+      stateY = y;
     }
-    lastY = y;
+    ticking = false;
   }
-  document.addEventListener('scroll', updateNavState, { passive:true });
+  document.addEventListener('scroll', () => {
+    if(!ticking){
+      requestAnimationFrame(updateNavState);
+      ticking = true;
+    }
+  }, { passive:true });
   updateNavState();
 }
 
@@ -233,6 +274,7 @@ if(burgerBtn && navLinks){
     const isOpen = navLinks.classList.toggle('open');
     burgerBtn.classList.toggle('open', isOpen);
     burgerBtn.setAttribute('aria-expanded', isOpen);
+    if(isOpen && siteNav) siteNav.classList.remove('nav-hidden');
   });
   navLinks.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
@@ -479,72 +521,6 @@ if(typedRoleEl){
     });
   }
 
-  // --- 7. Magnetic buttons ---
-  const magneticEls = document.querySelectorAll('.btn-primary, .btn-ghost, .nav-cta');
-  if(finePointer && !reduceMotion && magneticEls.length){
-    const STRENGTH = 0.28;
-    const MAX_PULL = 10;
-    magneticEls.forEach(btn => {
-      btn.addEventListener('mousemove', (e) => {
-        const rect = btn.getBoundingClientRect();
-        let dx = (e.clientX - (rect.left + rect.width / 2)) * STRENGTH;
-        let dy = (e.clientY - (rect.top + rect.height / 2)) * STRENGTH;
-        dx = Math.max(-MAX_PULL, Math.min(MAX_PULL, dx));
-        dy = Math.max(-MAX_PULL, Math.min(MAX_PULL, dy));
-        btn.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`;
-      }, { passive:true });
-      btn.addEventListener('mouseleave', () => {
-        btn.style.transform = '';
-      });
-    });
-  }
-
-  // --- 8. Custom cursor (dot + lagging ring) ---
-  if(finePointer && !reduceMotion){
-    const dot = document.createElement('div');
-    dot.className = 'custom-cursor-dot';
-    const ring = document.createElement('div');
-    ring.className = 'custom-cursor-ring';
-    document.body.appendChild(dot);
-    document.body.appendChild(ring);
-    document.documentElement.classList.add('has-custom-cursor');
-
-    let mx = -100, my = -100, rx = -100, ry = -100;
-    let started = false;
-
-    function moveCursor(e){
-      mx = e.clientX; my = e.clientY;
-      dot.style.transform = `translate3d(${mx}px, ${my}px, 0)`;
-      if(!started){
-        started = true;
-        rx = mx; ry = my;
-        requestAnimationFrame(ringTick);
-      }
-    }
-    function ringTick(){
-      rx += (mx - rx) * 0.18;
-      ry += (my - ry) * 0.18;
-      ring.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
-      requestAnimationFrame(ringTick);
-    }
-    document.addEventListener('mousemove', moveCursor, { passive:true });
-
-    const hoverSelector = 'a, button, input, textarea, [role="button"], .price-card, .skill-card, .service-card';
-    document.addEventListener('mouseover', (e) => {
-      if(e.target.closest(hoverSelector)) ring.classList.add('cursor-hover');
-    }, { passive:true });
-    document.addEventListener('mouseout', (e) => {
-      if(e.target.closest(hoverSelector)) ring.classList.remove('cursor-hover');
-    }, { passive:true });
-
-    document.addEventListener('mouseleave', () => {
-      dot.style.opacity = '0'; ring.style.opacity = '0';
-    });
-    document.addEventListener('mouseenter', () => {
-      dot.style.opacity = ''; ring.style.opacity = '';
-    });
-  }
-
   // --- 9. Button ripple on click ---
   const rippleEls = document.querySelectorAll('.btn-primary, .btn-ghost, .nav-cta, .price-cta');
   rippleEls.forEach(btn => {
@@ -598,18 +574,17 @@ if(typedRoleEl){
     { title: 'Home', hint: 'Go to', icon: '⌂', url: 'index.html#home' },
     { title: 'About', hint: 'Go to', icon: '☺', url: 'index.html#about' },
     { title: 'Skills', hint: 'Go to', icon: '{ }', url: 'index.html#skills' },
+    { title: 'Services', hint: 'Go to', icon: '★', url: 'service.html#service' },
     { title: 'Projects', hint: 'Go to', icon: '▣', url: 'index.html#project' },
+    { title: 'MIR Lab', hint: 'Go to', icon: '🧪', url: 'index.html#mirlab' },
     { title: 'Journey', hint: 'Go to', icon: '↗', url: 'index.html#experience' },
     { title: 'Blog', hint: 'Go to', icon: '✎', url: 'index.html#blog' },
-    { title: 'Client Reviews', hint: 'Go to', icon: '"', url: 'index.html#reviews' },
     { title: 'FAQ', hint: 'Go to', icon: '?', url: 'index.html#faq' },
-    { title: 'Services', hint: 'Go to', icon: '★', url: 'service.html#service' },
-    { title: 'Pricing', hint: 'Go to', icon: '$', url: 'service.html#pricing' },
     { title: 'Contact page', hint: 'Go to', icon: '✉', url: 'contact.html#contact' },
     { title: 'All blog posts', hint: 'Go to', icon: '✎', url: 'blog.html#blog' },
     { title: 'Email me', hint: 'Action', icon: '@', url: 'mailto:mir.nasrullah@email.com' },
     { title: 'Download CV', hint: 'Action', icon: '⬇', url: 'assets/Mir-Nasrullah-CV.pdf' },
-    { title: 'View GitHub', hint: 'Action', icon: '⌥', url: 'https://github.com/' }
+    { title: 'View GitHub', hint: 'Action', icon: '⌥', url: 'https://github.com/yourhandle' }
   ];
 
   const overlay = document.createElement('div');
@@ -796,7 +771,7 @@ if(typedRoleEl){
     },
     whoami(){
       print('Mir Nasrullah — frontend developer, self-taught, growing into backend.', 'accent');
-      print('Based in Karachi, Pakistan. Open to work.');
+      print('Based in Quetta, Pakistan. Open to work.');
     },
     skills(){
       print('Frontend : JavaScript, HTML, CSS', 'accent');

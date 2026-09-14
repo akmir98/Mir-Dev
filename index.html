@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mir Nasrullah — Web Developer</title>
-<meta name="description" content="Portfolio of Mir Nasrullah, a web developer with 2 years of frontend experience now growing into backend development.">
+<title>MIR.DEV — Full-Stack Developer</title>
+<meta name="description" content="MIR.DEV — Mir Nasrullah, a full-stack developer with 3+ years of frontend experience building modern web experiences and scalable backend systems, now exploring AI-powered features.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
 <!-- Open Graph / social sharing -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="Mir Nasrullah — Web Developer">
-<meta property="og:description" content="Portfolio of Mir Nasrullah, a web developer with 2 years of frontend experience now growing into backend development.">
+<meta property="og:title" content="MIR.DEV — Full-Stack Developer">
+<meta property="og:description" content="Mir Nasrullah, a full-stack developer with 3+ years of frontend experience building modern web experiences and scalable backend systems.">
 <meta property="og:image" content="assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://yourportfolio.com/index.html">
-<meta property="og:site_name" content="Mir Nasrullah — Portfolio">
+<meta property="og:site_name" content="MIR.DEV">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Mir Nasrullah — Web Developer">
-<meta name="twitter:description" content="Portfolio of Mir Nasrullah, a web developer with 2 years of frontend experience now growing into backend development.">
-<meta name="twitter:image" content="assets/og-image.png">
+<meta name="twitter:title" content="MIR.DEV — Full-Stack Developer">
+<meta name="twitter:description" content="Mir Nasrullah, a full-stack developer with 3+ years of frontend experience building modern web experiences and scalable backend systems.">
+<meta name="twitter:image" content="og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style/main.css">
@@ -29,7 +29,11 @@
 <body class="loading">
 
 <div class="loader">
-  <h1 class="loader-text">Mir.Dev</h1>
+  <div class="loader-inner">
+    <h1 class="loader-text">MIR.DEV</h1>
+    <div class="loader-bar"><div class="loader-bar-fill" id="loaderBarFill"></div></div>
+    <p class="loader-sub">INITIALIZING EXPERIENCE...</p>
+  </div>
 </div>
 
 <div id="app">
@@ -41,10 +45,11 @@
     <div class="nav-links" id="navLinks">
       <a href="index.html#home">Home</a>
       <a href="index.html#about">About</a>
-      <a href="service.html#service">Service</a>
       <a href="index.html#skills">Skills</a>
-      <a href="service.html#pricing">Pricing</a>
-      <a href="index.html#project">Project</a>
+      <a href="service.html#service">Services</a>
+      <a href="index.html#project">Projects</a>
+      <a href="index.html#mirlab">MIR Lab</a>
+      <a href="index.html#experience">Journey</a>
       <a href="blog.html#blog">Blog</a>
       <a href="contact.html#contact">Contact</a>
     </div>
@@ -68,14 +73,15 @@
   <div class="hero-cursor-glow" aria-hidden="true"></div>
   <div class="wrap hero-grid">
     <div>
-    <div class="eyebrow load-in">Open to backend &amp; full-stack roles</div>
-    <h1 class="load-in" style="--d:.1s">Mir Nasrullah <span class="rule">builds interfaces,</span><br><span class="accent-line">now builds the systems</span><br>behind them.</h1>
-    <p class="hero-sub load-in" style="--d:.2s">Web developer with 2 years of frontend experience, currently deepening into backend engineering — APIs, databases, and server-side logic that frontend-me always wished were easier to work with.</p>
+    <div class="eyebrow load-in">MIR.DEV — Open to full-stack opportunities</div>
+    <h1 class="load-in" style="--d:.1s">Full-Stack Developer, <span class="rule">building real products</span><br><span class="accent-line">from front to back.</span></h1>
+    <p class="hero-sub load-in" style="--d:.2s">3+ years turning designs into interfaces that work — now building the backend systems, APIs, and logic that power them. Currently exploring AI-powered features.</p>
     <div class="typed-role load-in" style="--d:.25s"><span id="typedRole"></span><span class="cursor"></span></div>
-    <div class="learning-badge load-in" style="--d:.27s"><span class="brain">🧠</span> Currently learning: <b>Node.js &amp; Express</b></div>
+    <div class="learning-badge load-in" style="--d:.27s"><span class="brain">🧠</span> Currently exploring: <b>AI Integration</b></div>
     <div class="hero-actions load-in" style="--d:.3s">
-      <a href="#project" class="btn-primary">View work →</a>
-      <a href="contact.html#contact" class="btn-ghost">Say hello</a>
+      <a href="#project" class="btn-primary">View Projects →</a>
+      <a href="contact.html#contact" class="btn-ghost">Contact Me</a>
+      <a href="https://github.com/yourhandle" class="btn-ghost" target="_blank" rel="noopener">GitHub</a>
     </div>
     </div>
 
@@ -86,10 +92,8 @@
       </svg>
       <div class="hero-photo-frame">
         <div class="hero-photo-glow"></div>
-        <span class="hero-hud hud-tl" aria-hidden="true">24.86°N, 67.00°E</span>
-        <span class="hero-hud hud-br" aria-hidden="true">DEV.01 // ACTIVE</span>
         <div class="hero-photo">
-          <img src="main.png" alt="Mir Nasrullah — Web Developer">
+          <img src="mir-photo2.png" alt="Mir Nasrullah — Full-Stack Developer">
           <div class="hero-photo-sheen" aria-hidden="true"></div>
           <div class="hero-photo-scan" aria-hidden="true"></div>
           <div class="hero-shine" aria-hidden="true"></div>
@@ -99,7 +103,7 @@
       </div>
       <div class="hero-badge hero-badge-top">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.9 6.6L22 9.3l-5 4.9 1.2 7-6.2-3.5L5.8 21l1.2-7-5-4.9 7.1-.7z" fill="#c8ff3d"/></svg>
-        2 Years Exp
+        3+ Years Exp
       </div>
       <div class="hero-badge hero-badge-bottom">
         <span class="dot"></span> Open to work
@@ -109,12 +113,12 @@
     <div class="shift reveal" style="--d:.1s; grid-column:1/-1;">
       <div class="shift-top">
         <span class="mono">Career trajectory</span>
-        <span class="mono">2 yrs frontend → backend in progress</span>
+        <span class="mono">Frontend-strong, building full-stack</span>
       </div>
       <div class="shift-track"><div class="shift-fill"></div></div>
       <div class="shift-labels">
-        <span><b>Frontend</b> — React, JS, CSS</span>
-        <span><b>Backend</b> — Node, APIs, databases</span>
+        <span><b>Frontend</b> — JavaScript, HTML, CSS</span>
+        <span><b>Backend</b> — Node.js, Express, REST APIs</span>
       </div>
     </div>
   </div>
@@ -124,13 +128,13 @@
   <div class="wrap stats-grid stats-grid-3">
     <div class="stat reveal">
       <div class="stat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#c8ff3d" stroke-width="1.6"/><path d="M3 10h18M8 3v4M16 3v4" stroke="#c8ff3d" stroke-width="1.6" stroke-linecap="round"/></svg></div>
-      <h3><span class="stat-num" data-target="2" data-suffix="+">0</span></h3>
-      <p>Years building frontend interfaces</p>
+      <h3><span class="stat-num" data-target="3" data-suffix="+">0</span></h3>
+      <p>Years of frontend development experience</p>
     </div>
     <div class="stat reveal" style="--d:.08s">
       <div class="stat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="7" height="7" rx="1.5" stroke="#c8ff3d" stroke-width="1.6"/><rect x="13" y="4" width="7" height="7" rx="1.5" stroke="#c8ff3d" stroke-width="1.6"/><rect x="4" y="13" width="7" height="7" rx="1.5" stroke="#c8ff3d" stroke-width="1.6"/><rect x="13" y="13" width="7" height="7" rx="1.5" stroke="#c8ff3d" stroke-width="1.6"/></svg></div>
-      <h3><span class="stat-num" data-target="10" data-suffix="+">0</span></h3>
-      <p>Projects shipped, from UI to full pages</p>
+      <h3><span class="stat-num" data-target="3" data-suffix="">0</span></h3>
+      <p>Projects built, from UI to full-stack</p>
     </div>
     <div class="stat reveal" style="--d:.16s">
       <div class="stat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6" stroke="#c8ff3d" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -146,9 +150,9 @@
     <div class="section-head reveal">
       <div>
         <span class="mono">01 — About</span>
-        <h2>From pixels to processes.</h2>
+        <h2>Full-stack development, backed by frontend craft.</h2>
       </div>
-      <p>How two years on the frontend shaped the way I think about backend work.</p>
+      <p>How 3+ years of frontend work shaped the way I build complete products.</p>
     </div>
     <div class="about about-3col">
       <div class="avatar-wrap reveal">
@@ -157,22 +161,22 @@
         <span class="avatar-chip chip-2" aria-hidden="true">{ }</span>
         <span class="avatar-chip chip-3" aria-hidden="true">⚡</span>
         <div class="avatar">
-          <img src="mir-photo2.png" alt="Mir Nasrullah">
+          <img src="main.png" alt="Mir Nasrullah">
           <span class="avatar-corner tl"></span>
           <span class="avatar-corner br"></span>
           <span class="avatar-tag"><span class="dot"></span>Mir Nasrullah</span>
         </div>
       </div>
       <div class="about-copy reveal" style="--d:.08s">
-        <p>I started as a frontend developer, spending two years turning designs into interfaces people actually enjoy using — clean layouts, smooth interactions, and code that holds up across screen sizes.</p>
-        <p>Building UI for two years taught me to think from the user's side of the screen. Now I'm applying that same care to backend development — learning how servers, APIs, and databases work so I can build the full picture, not just the part people see.</p>
-        <p>My goal is simple: become a full-stack developer who writes frontend that feels good and backend that holds up.</p>
+        <p>I've spent 3+ years turning designs into interfaces people actually enjoy using — clean layouts, smooth interactions, and code that holds up across screen sizes.</p>
+        <p>That frontend foundation now extends into full-stack development — building APIs with Node.js and Express, and structuring the logic that powers a product end to end, not just the part people see.</p>
+        <p>I'm also exploring AI integrations, adding intelligent features to the applications I build.</p>
       </div>
       <ul class="about-list reveal" style="--d:.16s">
-        <li><span>Role</span><span>Frontend Developer</span></li>
-        <li><span>Currently learning</span><span>Backend Development</span></li>
-        <li><span>Experience</span><span>2 Years</span></li>
-        <li><span>Based in</span><span>quetta, Pakistan</span></li>
+        <li><span>Role</span><span>Full-Stack Developer</span></li>
+        <li><span>Exploring</span><span>AI Integration</span></li>
+        <li><span>Experience</span><span>3+ Years</span></li>
+        <li><span>Based in</span><span>Quetta, Pakistan</span></li>
         <li><span>Status</span><span>Open to opportunities</span></li>
       </ul>
     </div>
@@ -184,13 +188,13 @@
     <div class="section-head reveal">
       <div>
         <span class="mono">02 — Skills</span>
-        <h2>Two years on the frontend, now going full-stack.</h2>
+        <h2>A full-stack toolkit, growing every day.</h2>
       </div>
-      <p>Solid, hands-on frontend skills — plus the backend fundamentals I'm actively building on top of them.</p>
+      <p>The technologies I build with — frontend, backend, and what I'm exploring next.</p>
     </div>
     <div class="skills-grid skills-grid-3">
       <div class="skill-card reveal">
-        <span class="tag">Established</span>
+        <span class="tag">Core</span>
         <h3>Frontend</h3>
         <div class="chips">
           <span class="chip chip-strong">JavaScript</span>
@@ -199,11 +203,12 @@
         </div>
       </div>
       <div class="skill-card reveal" style="--d:.1s">
-        <span class="tag">In progress</span>
+        <span class="tag">Growing</span>
         <h3>Backend</h3>
         <div class="chips">
           <span class="chip">Node.js</span>
-          <span class="chip">Express</span>
+          <span class="chip">Express.js</span>
+          <span class="chip">REST APIs</span>
         </div>
       </div>
       <div class="skill-card reveal" style="--d:.2s">
@@ -212,6 +217,13 @@
         <div class="chips">
           <span class="chip">Git</span>
           <span class="chip">GitHub</span>
+        </div>
+      </div>
+      <div class="skill-card skill-card-exploring reveal" style="--d:.3s">
+        <span class="tag tag-exploring">Exploring</span>
+        <h3>AI</h3>
+        <div class="chips">
+          <span class="chip chip-exploring">AI Integration</span>
         </div>
       </div>
     </div>
@@ -244,7 +256,18 @@
           <span class="project-num">01 / Client Website</span>
           <h3>Dr Physio Rehab</h3>
           <p>A multi-page physiotherapy clinic website with service pages, a blog, and appointment booking — built for a real client in Islamabad.</p>
-          <a href="https://www.drphysiorehabonline.com/" class="project-link" target="_blank" rel="noopener">View project <span class="arrow">→</span></a>
+          <div class="project-meta">
+            <span class="project-role"><b>Role:</b> Sole developer, design to deploy</span>
+            <span class="project-feature"><b>Key feature:</b> Full booking &amp; contact flow</span>
+          </div>
+          <div class="project-tech">
+            <span class="tech-badge">HTML</span>
+            <span class="tech-badge">CSS</span>
+            <span class="tech-badge">JavaScript</span>
+          </div>
+          <div class="project-links">
+            <a href="https://www.drphysiorehabonline.com/" class="project-link" target="_blank" rel="noopener">Live Demo <span class="arrow">→</span></a>
+          </div>
         </div>
       </div>
 
@@ -267,7 +290,18 @@
           <span class="project-num">02 / Learning Platform</span>
           <h3>JavaScript Learning Hub</h3>
           <p>An anime-themed interactive platform for learning JavaScript, with a live code editor, curriculum tracker, and practice arena.</p>
-          <a href="https://javascript-hub.vercel.app/" class="project-link" target="_blank" rel="noopener">View project <span class="arrow">→</span></a>
+          <div class="project-meta">
+            <span class="project-role"><b>Role:</b> Sole developer, design to deploy</span>
+            <span class="project-feature"><b>Key feature:</b> In-browser live code editor</span>
+          </div>
+          <div class="project-tech">
+            <span class="tech-badge">JavaScript</span>
+            <span class="tech-badge">HTML</span>
+            <span class="tech-badge">CSS</span>
+          </div>
+          <div class="project-links">
+            <a href="https://javascript-hub.vercel.app/" class="project-link" target="_blank" rel="noopener">Live Demo <span class="arrow">→</span></a>
+          </div>
         </div>
       </div>
 
@@ -287,10 +321,55 @@
           <span class="project-num">03 / Personal Project</span>
           <h3>Personal Portfolio (v1)</h3>
           <p>An earlier personal portfolio covering services, projects, and contact — built while first learning frontend fundamentals.</p>
-          <a href="https://my-portfoli-website.vercel.app/" class="project-link" target="_blank" rel="noopener">View project <span class="arrow">→</span></a>
+          <div class="project-meta">
+            <span class="project-role"><b>Role:</b> Sole developer, design to deploy</span>
+            <span class="project-feature"><b>Key feature:</b> Fully responsive multi-section layout</span>
+          </div>
+          <div class="project-tech">
+            <span class="tech-badge">HTML</span>
+            <span class="tech-badge">CSS</span>
+            <span class="tech-badge">JavaScript</span>
+          </div>
+          <div class="project-links">
+            <a href="https://my-portfoli-website.vercel.app/" class="project-link" target="_blank" rel="noopener">Live Demo <span class="arrow">→</span></a>
+          </div>
         </div>
       </div>
     </div>
+    <p class="project-github-note">Source code available on request — <a href="https://github.com/yourhandle" target="_blank" rel="noopener">github.com/yourhandle</a></p>
+  </div>
+</section>
+
+<section class="section" id="mirlab" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="mono">🧪 — MIR LAB</span>
+        <h2>Experiments, AI tools, prototypes, and ideas I'm building.</h2>
+      </div>
+      <p>A space for things that aren't quite "portfolio projects" yet.</p>
+    </div>
+    <div class="lab-grid">
+      <div class="lab-card lab-card-soon reveal">
+        <div class="lab-card-icon">🤖</div>
+        <span class="lab-status">Coming Soon</span>
+        <h3>AI Chat Assistant</h3>
+        <p>An AI-powered assistant integrated into a real web app. In active development.</p>
+      </div>
+      <div class="lab-card lab-card-soon reveal" style="--d:.1s">
+        <div class="lab-card-icon">⚙️</div>
+        <span class="lab-status">Coming Soon</span>
+        <h3>Automation Tools</h3>
+        <p>Small scripts and tools that automate parts of my own dev workflow.</p>
+      </div>
+      <div class="lab-card lab-card-soon reveal" style="--d:.2s">
+        <div class="lab-card-icon">🧬</div>
+        <span class="lab-status">Coming Soon</span>
+        <h3>JavaScript Experiments</h3>
+        <p>Small interactive builds — testing ideas that don't need a full project around them.</p>
+      </div>
+    </div>
+    <p class="lab-note">This section updates as experiments actually ship — no placeholders pretending to be finished work.</p>
   </div>
 </section>
 
@@ -299,25 +378,33 @@
     <div class="section-head reveal">
       <div>
         <span class="mono">04 — Journey</span>
-        <h2>How I taught myself to build.</h2>
+        <h2>From frontend fundamentals to full-stack.</h2>
       </div>
-      <p>No company roles yet — this is self-directed, project by project.</p>
+      <p>3+ years of self-directed growth — with AI on the horizon.</p>
     </div>
     <div class="timeline reveal">
       <div class="tl-item reveal">
-        <span class="tl-date">2025 — Present</span>
+        <span class="tl-date">Current Direction</span>
         <div>
-          <h3>Building Real Projects</h3>
-          <span class="tl-role">Self-Taught / Independent</span>
-          <p><strong>Shipped a real client site (Dr Physio Rehab)</strong> and an interactive JS learning platform, while starting Node.js and backend fundamentals.</p>
+          <h3>AI Engineering</h3>
+          <span class="tl-role">Exploring</span>
+          <p><strong>Exploring AI APIs and AI-powered features</strong> to bring intelligent functionality into the applications I build.</p>
         </div>
       </div>
       <div class="tl-item reveal" style="--d:.1s">
+        <span class="tl-date">2025 — Present</span>
+        <div>
+          <h3>Full-Stack Development</h3>
+          <span class="tl-role">Node.js • Express • REST APIs • Backend Systems</span>
+          <p><strong>Shipped a real client site (Dr Physio Rehab)</strong> and an interactive JS learning platform, while building out backend systems with Node.js and Express.</p>
+        </div>
+      </div>
+      <div class="tl-item reveal" style="--d:.2s">
         <span class="tl-date">2023 — 2025</span>
         <div>
-          <h3>Learning the Fundamentals</h3>
-          <span class="tl-role">Self-Taught / Independent</span>
-          <p><strong>Learned HTML, CSS, and JavaScript from scratch</strong>, then React — through documentation, tutorials, and consistent practice.</p>
+          <h3>Frontend Development</h3>
+          <span class="tl-role">HTML • CSS • JavaScript • Responsive Design</span>
+          <p><strong>Learned HTML, CSS, and JavaScript from scratch</strong>, then built real interfaces through consistent, hands-on practice.</p>
         </div>
       </div>
     </div>
@@ -419,58 +506,12 @@
   </div>
 </section>
 
-<section class="section" id="reviews" style="padding-top:0;">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div>
-        <span class="mono">06 — Client reviews</span>
-        <h2>What people say about working with me.</h2>
-      </div>
-      <p>Placeholder for now — real quotes go here once I have them.</p>
-    </div>
-    <div class="review-quote-grid">
-      <div class="review-quote-card reveal">
-        <span class="review-quote-mark" aria-hidden="true">&ldquo;</span>
-        <blockquote>Placeholder testimonial — replace with a real quote from a client or teammate about working with you.</blockquote>
-        <div class="review-quote-person">
-          <div class="review-quote-avatar">AK</div>
-          <div>
-            <div class="review-quote-name">Client Name</div>
-            <div class="review-quote-role">Role, Company</div>
-          </div>
-        </div>
-      </div>
-      <div class="review-quote-card reveal" style="--d:.1s">
-        <span class="review-quote-mark" aria-hidden="true">&ldquo;</span>
-        <blockquote>Placeholder testimonial — replace with a real quote from a client or teammate about working with you.</blockquote>
-        <div class="review-quote-person">
-          <div class="review-quote-avatar">JH</div>
-          <div>
-            <div class="review-quote-name">Client Name</div>
-            <div class="review-quote-role">Role, Company</div>
-          </div>
-        </div>
-      </div>
-      <div class="review-quote-card reveal" style="--d:.2s">
-        <span class="review-quote-mark" aria-hidden="true">&ldquo;</span>
-        <blockquote>Placeholder testimonial — replace with a real quote from a client or teammate about working with you.</blockquote>
-        <div class="review-quote-person">
-          <div class="review-quote-avatar">AM</div>
-          <div>
-            <div class="review-quote-name">Client Name</div>
-            <div class="review-quote-role">Role, Company</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<section class="section section-alt" id="faq" style="padding-top:0;">
+<section class="section" id="faq" style="padding-top:0;">
   <div class="wrap">
     <div class="section-head reveal">
       <div>
-        <span class="mono">07 — FAQ</span>
+        <span class="mono">06 — FAQ</span>
         <h2>Good to know.</h2>
       </div>
       <p>Quick answers before you reach out.</p>
@@ -478,15 +519,15 @@
     <div class="faq reveal">
       <div class="faq-item">
         <button class="faq-q">What kind of role are you looking for? <span class="plus">+</span></button>
-        <div class="faq-a"><p>Frontend roles that let me keep growing into backend work, or junior full-stack positions where I can apply both.</p></div>
+        <div class="faq-a"><p>Full-stack roles, or frontend-focused roles with room to keep building out backend and AI skills.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q">Are you available for freelance work? <span class="plus">+</span></button>
         <div class="faq-a"><p>Yes — reach out with your project details and timeline and I'll get back to you quickly.</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q">What are you currently learning? <span class="plus">+</span></button>
-        <div class="faq-a"><p>Node.js, Express, REST API design, and working with databases — the backend fundamentals that complete the full-stack picture.</p></div>
+        <button class="faq-q">What are you currently exploring? <span class="plus">+</span></button>
+        <div class="faq-a"><p>AI APIs and AI-powered features — bringing intelligent functionality into the full-stack apps I build.</p></div>
       </div>
     </div>
   </div>
@@ -496,8 +537,8 @@
   <div class="wrap">
     <div class="cta-banner reveal-scale">
       <span class="mono" style="color:var(--accent); font-size:12px;">Let's talk</span>
-      <h2>Let's work together.</h2>
-      <p>Got a project or a role in mind? Reach out directly, or head to the contact page.</p>
+      <h2>Let's build something useful.</h2>
+      <p>Have a project, idea, or opportunity? Let's talk.</p>
       <div class="cta-actions">
         <a href="mailto:mir.nasrullah@email.com" class="btn-primary">mir.nasrullah@email.com</a>
         <a href="contact.html#contact" class="btn-ghost">Full contact page →</a>
@@ -514,7 +555,7 @@
     <a href="#" aria-label="Instagram"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="#9a9c93" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="#9a9c93" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="#9a9c93"/></svg></a>
     <a href="#" aria-label="WhatsApp"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 00-7.8 13.4L3 21l4.7-1.2A9 9 0 1012 3z" stroke="#9a9c93" stroke-width="1.6" stroke-linejoin="round"/></svg></a>
   </div>
-  <p>Frontend Developer → Backend Developer</p>
+  <p>Full-Stack Developer • Exploring AI</p>
 </footer>
 
 </div><!-- /#app -->
