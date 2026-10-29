@@ -51,7 +51,7 @@ If it worked, you'll get `{"ok":true}` back and an email in your inbox.
 
 ## 4. Point the frontend at it
 
-In `assets/main.js`, find the `API_URL` constant near the contact-form
+In `script/main.js`, find the `API_URL` constant near the contact-form
 handler and set it to wherever this server is running:
 
 ```js
@@ -76,7 +76,7 @@ Whichever you use:
 1. Push this `backend/` folder to its own GitHub repo (or a subfolder of your main one)
 2. Set the same variables from `.env` in the host's dashboard as environment variables
 3. Set `ALLOWED_ORIGIN` to your real portfolio URL once it's live, not `*`
-4. Update `API_URL` in `assets/main.js` to the deployed URL and re-upload your site
+4. Update `API_URL` in `script/main.js` to the deployed URL and re-upload your site
 
 ## Notes
 

@@ -125,96 +125,75 @@ window.__heroMouse = { x: -9999, y: -9999, active: false };
   hero.addEventListener('mouseleave', onLeave, { passive:true });
 })();
 
-// Animated dust/dot particles in hero background (home page only)
+// Hero background: flowing light ribbons (replaces the old dots)
 (function(){
   const canvas = document.getElementById('dustCanvas');
   const hero = document.getElementById('home');
   if(!canvas || !hero) return;
   const ctx = canvas.getContext('2d');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let particles = [];
-  let w, h, dpr;
+  let w, h, dpr, t = 0, visible = true;
+
+  const ribbons = Array.from({ length: 7 }, (_, i) => ({
+    y: 0.28 + i * 0.075,          // vertical position (fraction of height)
+    amp: 26 + i * 7,
+    freq: 0.0032 - i * 0.00018,
+    speed: 0.0004 + i * 0.00007,
+    phase: i * 1.3,
+    alpha: 0.18 + (i % 3) * 0.08,
+    width: 1 + (i % 3) * 0.5
+  }));
 
   function resize(){
     dpr = Math.min(window.devicePixelRatio || 1, 2);
-    w = hero.offsetWidth;
-    h = hero.offsetHeight;
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    canvas.style.width = w + 'px';
-    canvas.style.height = h + 'px';
+    w = hero.offsetWidth; h = hero.offsetHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const count = Math.min(90, Math.floor((w * h) / 14000));
-    particles = Array.from({ length: count }, () => makeParticle());
+    if(reduceMotion) draw();
   }
 
-  function makeParticle(){
-    const isAccent = Math.random() < 0.22;
-    return {
-      x: Math.random() * w,
-      y: Math.random() * h,
-      r: isAccent ? 1.4 + Math.random() * 1.6 : 0.8 + Math.random() * 1.2,
-      vx: (Math.random() - 0.5) * 0.15,
-      vy: -0.06 - Math.random() * 0.18,
-      alpha: 0.15 + Math.random() * 0.45,
-      accent: isAccent
-    };
+  function draw(){
+    ctx.clearRect(0, 0, w, h);
+    const m = window.__heroMouse;
+    const mActive = m && m.active;
+    ctx.lineCap = 'round';
+    ribbons.forEach((r, idx) => {
+      const grad = ctx.createLinearGradient(0, 0, w, 0);
+      grad.addColorStop(0,   'rgba(200,255,61,0)');
+      grad.addColorStop(0.3, `rgba(200,255,61,${r.alpha})`);
+      grad.addColorStop(0.7, `rgba(143,179,44,${r.alpha})`);
+      grad.addColorStop(1,   'rgba(200,255,61,0)');
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = r.width;
+      ctx.beginPath();
+      for(let x = 0; x <= w; x += 8){
+        let bump = 0;
+        if(mActive){
+          const d = x - m.x;
+          bump = Math.exp(-(d * d) / 38000) * (m.y / h - r.y) * -70;
+        }
+        const y = h * r.y
+          + Math.sin(x * r.freq + t * r.speed * 1000 + r.phase) * r.amp
+          + Math.sin(x * r.freq * 2.3 - t * r.speed * 700) * r.amp * 0.35
+          + bump;
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    });
   }
-
-  const REPEL_RADIUS = 100;
-  const REPEL_STRENGTH = 2.4;
 
   function tick(){
-    ctx.clearRect(0, 0, w, h);
-    const mouse = window.__heroMouse;
-    const mouseActive = mouse && mouse.active;
-
-    particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
-
-      // gently push particles away from the cursor, they drift back
-      // naturally afterward via their own vx/vy
-      if(mouseActive){
-        const dx = p.x - mouse.x;
-        const dy = p.y - mouse.y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if(dist < REPEL_RADIUS && dist > 0.01){
-          const force = (REPEL_RADIUS - dist) / REPEL_RADIUS;
-          p.x += (dx / dist) * force * REPEL_STRENGTH;
-          p.y += (dy / dist) * force * REPEL_STRENGTH;
-        }
-      }
-
-      if(p.y < -10) { p.y = h + 10; p.x = Math.random() * w; }
-      if(p.x < -10) p.x = w + 10;
-      if(p.x > w + 10) p.x = -10;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = p.accent
-        ? `rgba(200,255,61,${p.alpha})`
-        : `rgba(242,241,234,${p.alpha * 0.6})`;
-      ctx.fill();
-    });
+    if(visible){ t += 1; draw(); }
     requestAnimationFrame(tick);
   }
 
   resize();
   window.addEventListener('resize', resize);
-
-  if(!reduceMotion){
-    requestAnimationFrame(tick);
-  } else {
-    // Draw a single static frame for reduced-motion users
-    ctx.clearRect(0, 0, w, h);
-    particles.forEach(p => {
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = p.accent ? `rgba(200,255,61,${p.alpha})` : `rgba(242,241,234,${p.alpha * 0.6})`;
-      ctx.fill();
-    });
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(es => es.forEach(e => visible = e.isIntersecting)).observe(hero);
   }
+  if(!reduceMotion) requestAnimationFrame(tick);
 })();
 
 // Scroll progress bar
@@ -361,7 +340,7 @@ if(contactForm){
   function fallbackToMailto(name, email, message){
     const subject = encodeURIComponent(`Portfolio inquiry from ${name || 'your site'}`);
     const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
-    window.location.href = `mailto:mir.nasrullah@email.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:nasrullahmir14@gmail.com?subject=${subject}&body=${body}`;
   }
 
   contactForm.addEventListener('submit', async (e) => {
@@ -582,9 +561,9 @@ if(typedRoleEl){
     { title: 'FAQ', hint: 'Go to', icon: '?', url: 'index.html#faq' },
     { title: 'Contact page', hint: 'Go to', icon: '✉', url: 'contact.html#contact' },
     { title: 'All blog posts', hint: 'Go to', icon: '✎', url: 'blog.html#blog' },
-    { title: 'Email me', hint: 'Action', icon: '@', url: 'mailto:mir.nasrullah@email.com' },
-    { title: 'Download CV', hint: 'Action', icon: '⬇', url: 'assets/Mir-Nasrullah-CV.pdf' },
-    { title: 'View GitHub', hint: 'Action', icon: '⌥', url: 'https://github.com/yourhandle' }
+    { title: 'Email me', hint: 'Action', icon: '@', url: 'mailto:nasrullahmir14@gmail.com' },
+    { title: 'Download CV', hint: 'Action', icon: '⬇', url: 'Mir-Nasrullah-CV.pdf' },
+    { title: 'View GitHub', hint: 'Action', icon: '⌥', url: 'https://github.com/akmir98' }
   ];
 
   const overlay = document.createElement('div');
@@ -774,9 +753,11 @@ if(typedRoleEl){
       print('Based in Quetta, Pakistan. Open to work.');
     },
     skills(){
-      print('Frontend : JavaScript, HTML, CSS', 'accent');
-      print('Backend  : Node.js, Express', 'accent');
-      print('Tools    : Git, GitHub', 'accent');
+      print('Frontend : HTML, CSS, JavaScript, React', 'accent');
+      print('Backend  : Node.js, Express, REST APIs', 'accent');
+      print('Database : MongoDB', 'accent');
+      print('Tools    : Git, GitHub, VS Code', 'accent');
+      print('AI Tools : Claude, ChatGPT, DeepSeek, Gemini', 'accent');
     },
     projects(){
       print('1. Dr Physio Rehab       — real client site (drphysiorehabonline.com)');
@@ -789,7 +770,7 @@ if(typedRoleEl){
       print('2025–Present: Building real projects, picking up Node.js and backend fundamentals.');
     },
     contact(){
-      print('Email : mir.nasrullah@email.com', 'accent');
+      print('Email : nasrullahmir14@gmail.com', 'accent');
       print('Or use the contact form → contact.html', 'accent');
     },
     clear(){
@@ -820,4 +801,128 @@ if(typedRoleEl){
   if(windowEl){
     windowEl.addEventListener('click', () => input.focus());
   }
+})();
+// ============================================================
+// SCROLL ANIMATION UPGRADE
+// ============================================================
+(function(){
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // 1. Auto-stagger children of grids so cards cascade in
+  document.querySelectorAll('.skills-grid, .project-grid, .lab-grid, .blog-grid, .stats-grid').forEach(grid => {
+    [...grid.children].forEach((el, i) => {
+      if(el.classList.contains('reveal') && !el.style.getPropertyValue('--d')) el.style.setProperty('--d', (i * 0.1) + 's');
+    });
+  });
+
+  // 2. Split headings into words for a masked slide-up reveal
+  const splits = document.querySelectorAll('[data-split]');
+  splits.forEach(h => {
+    const words = h.textContent.trim().split(/\s+/);
+    h.setAttribute('aria-label', h.textContent.trim());
+    h.innerHTML = words.map((w, i) => `<span class="w" aria-hidden="true"><span style="--i:${i}">${w}</span></span>`).join(' ');
+  });
+  if(splits.length){
+    const sio = new IntersectionObserver(es => es.forEach(e => {
+      if(e.isIntersecting){ e.target.classList.add('split-in'); sio.unobserve(e.target); }
+    }), { threshold:0.4 });
+    splits.forEach(h => reduce ? h.classList.add('split-in') : sio.observe(h));
+  }
+
+  // 3. Timeline: line fills in proportion to scroll, each dot lights up as it's reached
+  const tl = document.querySelector('.timeline');
+  if(tl){
+    const upd = () => {
+      const r = tl.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const p = Math.max(0, Math.min(1, (vh * 0.65 - r.top) / r.height));
+      tl.style.setProperty('--tl', p.toFixed(3));
+    };
+    window.addEventListener('scroll', upd, { passive:true });
+    window.addEventListener('resize', upd);
+    upd();
+  }
+
+  // 4. Client reviews marquee: clone for seamless loop, speed reacts to scroll velocity
+  document.querySelectorAll('.rv-track').forEach(track => {
+    [...track.children].forEach(card => {
+      const c = card.cloneNode(true);
+      c.setAttribute('aria-hidden', 'true');
+      track.appendChild(c);
+    });
+  });
+  if(!reduce){
+    const tracks = [...document.querySelectorAll('.rv-track')];
+    if(tracks.length){
+      let lastY = window.scrollY, rate = 1, target = 1;
+      window.addEventListener('scroll', () => {
+        const v = Math.abs(window.scrollY - lastY);
+        lastY = window.scrollY;
+        target = 1 + Math.min(v * 0.35, 6);
+      }, { passive:true });
+      (function loop(){
+        target += (1 - target) * 0.06;
+        rate += (target - rate) * 0.12;
+        tracks.forEach(t => t.getAnimations().forEach(a => { a.playbackRate = rate; }));
+        requestAnimationFrame(loop);
+      })();
+    }
+  }
+})();
+
+// ============================================================
+// REVIEWS: staggered entrance, tilt + glow on hover
+// ============================================================
+(function(){
+  const marquee = document.querySelector('.rv-marquee');
+  if(!marquee) return;
+  marquee.querySelectorAll('.rv-card').forEach((c, i) => {
+    c.style.setProperty('--k', (i % 8));
+    c.querySelectorAll('.rv-stars svg').forEach((st, j) => st.style.setProperty('--s', j));
+    if(window.matchMedia('(pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      c.addEventListener('mousemove', e => {
+        const r = c.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+        c.style.setProperty('--gx', (px * 100) + '%');
+        c.style.setProperty('--gy', (py * 100) + '%');
+        c.style.transform = `translateY(-8px) perspective(700px) rotateY(${((px - .5) * 10).toFixed(2)}deg) rotateX(${((.5 - py) * 10).toFixed(2)}deg)`;
+      }, { passive:true });
+      c.addEventListener('mouseleave', () => { c.style.transform = ''; });
+    }
+  });
+})();
+
+// ============================================================
+// TOOLBOX: filter pills, staggered entrance, cursor spotlight
+// ============================================================
+(function(){
+  const grid = document.querySelector('.tb-grid');
+  if(!grid) return;
+  const tiles = [...grid.querySelectorAll('.tb-tile')];
+  const pills = [...document.querySelectorAll('.tb-pill')];
+
+  function show(list){
+    list.forEach((t, i) => { t.style.setProperty('--i', i); t.classList.remove('in'); });
+    void grid.offsetWidth; // restart the entrance transition
+    requestAnimationFrame(() => list.forEach(t => t.classList.add('in')));
+  }
+
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if(e.isIntersecting){ show(tiles.filter(t => !t.classList.contains('hide'))); io.disconnect(); }
+  }), { threshold:0.12 });
+  io.observe(grid);
+
+  pills.forEach(p => p.addEventListener('click', () => {
+    pills.forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    const f = p.dataset.filter;
+    tiles.forEach(t => t.classList.toggle('hide', f !== 'All' && t.dataset.cat !== f));
+    show(tiles.filter(t => !t.classList.contains('hide')));
+  }));
+
+  tiles.forEach(t => t.addEventListener('mousemove', e => {
+    const r = t.getBoundingClientRect();
+    t.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+    t.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+  }, { passive:true }));
 })();
