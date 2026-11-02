@@ -326,7 +326,8 @@ document.querySelectorAll('.faq-item').forEach(item => {
 const contactForm = document.getElementById('contactForm');
 if(contactForm){
   // Set this to your deployed backend once it's live — see backend/README.md
-  const API_URL = 'http://localhost:5000/api/contact';
+  const isLocal = ['localhost', '127.0.0.1'].includes(location.hostname);
+  const API_URL = isLocal && location.port !== '3000' ? 'http://localhost:5000/api/contact' : '/api/contact';
 
   const submitBtn = document.getElementById('cfSubmit');
   const statusEl = document.getElementById('cfStatus');
