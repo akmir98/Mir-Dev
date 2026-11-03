@@ -2,7 +2,7 @@
 // On Vercel this file is deployed as a serverless function: every request to
 // /api/* is rewritten here (see vercel.json) and handled by this Express app.
 // Locally, run `npm run api` (server.js) or `vercel dev`.
-require('dotenv').config();
+try { require('dotenv').config(); } catch (e) { /* dotenv is only for local .env files; Vercel injects env vars itself */ }
 const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
